@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import io.github.cdimascio.dotenv.Dotenv;
-
 import javax.security.auth.login.LoginException;
 import java.util.EnumSet;
 import java.util.Set;
@@ -15,6 +14,7 @@ public class SteJoBott {
 
     private final ShardManager shardManager;
     private final Set<String> adminIds;
+
 
     public SteJoBott() throws LoginException {
         // Load environment variables
@@ -51,6 +51,7 @@ public class SteJoBott {
         builder.setActivity(Activity.customStatus("Sucking Jon"));
 
         shardManager = builder.build();
+        shardManager.addEventListener(new CommandListener(this));
     }
 
     public ShardManager getShardManager() {

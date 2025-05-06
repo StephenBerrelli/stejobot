@@ -13,13 +13,16 @@ version = "1.0"
 val jdaVersion = "5.5.1"
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven(url = "https://m2.dv8tion.net/releases")
 }
 
 dependencies {
     implementation("net.dv8tion:JDA:$jdaVersion")
     implementation("ch.qos.logback:logback-classic:1.5.13")
     implementation("io.github.cdimascio:dotenv-java:3.0.0") // Load .env file at runtime
+    implementation("com.sedmelluq:lavaplayer:1.3.78")
 }
 
 tasks.withType<JavaCompile> {
