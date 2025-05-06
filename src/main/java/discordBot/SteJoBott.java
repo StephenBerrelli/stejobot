@@ -41,7 +41,8 @@ public class SteJoBott {
                 GatewayIntent.GUILD_MESSAGES,
                 GatewayIntent.MESSAGE_CONTENT,
                 GatewayIntent.GUILD_MEMBERS,
-                GatewayIntent.GUILD_PRESENCES
+                GatewayIntent.GUILD_PRESENCES,
+                GatewayIntent.GUILD_VOICE_STATES
         );
 
         // Build the shard manager
@@ -52,6 +53,8 @@ public class SteJoBott {
 
         shardManager = builder.build();
         shardManager.addEventListener(new CommandListener(this));
+        shardManager.addEventListener(new VoiceStateUpdateListener());
+
     }
 
     public ShardManager getShardManager() {

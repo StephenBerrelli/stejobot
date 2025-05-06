@@ -1,36 +1,37 @@
 package discordBot.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import net.dv8tion.jda.api.audio.AudioSendHandler;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
+
 import java.nio.ByteBuffer;
 
 public class AudioPlayerSendHandler implements AudioSendHandler {
     private final AudioPlayer audioPlayer;
-    private ByteBuffer buffer;
-    private final byte[] data;
+    private AudioFrame lastFrame;
 
     public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
-        this.data = new byte[1024];
     }
 
     @Override
     public boolean canProvide() {
-        final AudioFrame frame = audioPlayer.provide();
-        if (frame == null) return false;
-
-        buffer = ByteBuffer.wrap(frame.getData());
-        return true;
+        // Provide a new audio frame if the previous one has been consumed.
+        lastFrame = audioPlayer.provide();
+        return lastFrame != null;
     }
 
     @Override
     public ByteBuffer provide20MsAudio() {
-        return buffer;
+        // Return the data from the last provided frame.
+        if (lastFrame == null) {
+            return null;  // If no frame is available, return null.
+        }
+        return ByteBuffer.wrap(lastFrame.getData());
     }
 
     @Override
     public boolean isOpus() {
-        return true;
+        return true;  // Audio sent is Opus encoded, which is required for Discord voice channels.
     }
 }

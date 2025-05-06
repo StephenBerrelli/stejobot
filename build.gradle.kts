@@ -1,33 +1,36 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    application
-    id("com.gradleup.shadow") version "8.3.1"
+    id("application")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+    maven(url = "https://m2.dv8tion.net/releases")  // For JDA and related dependencies
+    maven(url = "https://jitpack.io") // For other dependencies
+    maven { url = uri("https://repo.lavalink.dev/releases") } // Official Lavalink repository
 }
 
 application {
     mainClass.set("discordBot.SteJoBott")
 }
 
-group = "org.example"
-version = "1.0"
-
-val jdaVersion = "5.5.1"
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven(url = "https://m2.dv8tion.net/releases")
-}
-
 dependencies {
-    implementation("net.dv8tion:JDA:$jdaVersion")
+    implementation("net.dv8tion:JDA:5.5.1")
     implementation("ch.qos.logback:logback-classic:1.5.13")
-    implementation("io.github.cdimascio:dotenv-java:3.0.0") // Load .env file at runtime
-    implementation("com.sedmelluq:lavaplayer:1.3.78")
+    implementation("io.github.cdimascio:dotenv-java:3.0.0")
+
+    // Lavalink client interaction
+    implementation("dev.arbjerg:lavaplayer:2.2.3")  // Use Lavaplayer to interact with Lavalink
 }
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-    options.isIncremental = true
-    sourceCompatibility = "1.8"
-    targetCompatibility = "1.8"
+tasks.named<ShadowJar>("shadowJar") {
+    archiveFileName.set("discordBot-1.0.jar")
+    archiveClassifier.set("")
 }
